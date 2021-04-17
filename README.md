@@ -21,10 +21,10 @@ randomForestSRC version=2.9.3
 ## The datasets of the program
 
 The data used in this research are collected from The Cancer Genome Atlas (TCGA) project and that are publicly available at https://portal.gdc.cancer.gov.
-The describe of the program
 
+## The describe of the program
 
-## The program is divided into three sections saved in this repository.
+The program is divided into three sections saved in this repository.
 
 1) Data preprocessing: preprocessed data can be used to test the models, the programs can directly process the data downloaded by TCGA.
 
