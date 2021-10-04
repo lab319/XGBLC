@@ -1,7 +1,6 @@
 This repository contains python and R implementation of the algorithms proposed in "XGBLC: An Improved Survival Prediction Model Based on XGBoost".
 
-If you find our method is useful, please cite our paper:Baoshan Ma, Ge Yan, Bingjie Chai, Xiaoyu Hou. XGBLC: An Improved Survival Prediction Model Based 
-on Xgboost.Bioinformatics,2021,https://doi.org/10.1093/bioinformatics/btab675.  Contact email: 729886870@qq.com (Ge Yan) and mabaoshan@dlmu.edu.cn (Baoshan Ma).
+If you find our method is useful, please cite our paper:Baoshan Ma, Ge Yan, Bingjie Chai, Xiaoyu Hou. XGBLC: An Improved Survival Prediction Model Based on Xgboost.Bioinformatics, 2021, https://doi.org/10.1093/bioinformatics/btab675.  Contact email: 729886870@qq.com (Ge Yan) and mabaoshan@dlmu.edu.cn (Baoshan Ma).
 
 
 ## The version of Python, R and packages
