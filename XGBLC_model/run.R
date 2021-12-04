@@ -7,21 +7,21 @@ library(xgboost)
 library(Matrix)
 
 
-## ¶ÁÈ¡Êý¾Ý¼¯
-clinical <- read.table(file="TCGA clinical data.txt",T) ## ¶ÁÈ¡ÁÙ´²Êý¾Ý
+## è¯»å–æ•°æ®é›†
+clinical <- read.table(file="TCGA clinical data.txt",T) ## è¯»å–ä¸´åºŠæ•°æ®
 clinical <- data.frame(clinical)
 dim(clinical)		#497*3
 head(clinical)
 time <- clinical$time
 status <- clinical$status
-RNA <- read.table(file="TCGA RNA data.txt",T)  ## ¶ÁÈ¡RNA-Seq»ùÒò±í´ïÊý¾Ý
+RNA <- read.table(file="TCGA RNA data.txt",T)  ## è¯»å–RNA-SeqåŸºå› è¡¨è¾¾æ•°æ®
 RNA <- data.frame(RNA,stringsAsFactors=TRUE)
 dim(RNA)		#497*16321
 RNA1 <- cbind(RNA,time,status)	
 x <- RNA1
 
-### 5ÕÛ½»²æÑéÖ¤»®·ÖÑµÁ·¼¯ºÍ²âÊÔ¼¯£¬Éú´æºÍËÀÍöÑù±¾±ÈÀý±£³ÖÒ»ÖÂ
-### forÑ­»·5´Î×ö²»Í¬ÕÛÊý
+### 5æŠ˜äº¤å‰éªŒè¯åˆ’åˆ†è®­ç»ƒé›†å’Œæµ‹è¯•é›†ï¼Œç”Ÿå­˜å’Œæ­»äº¡æ ·æœ¬æ¯”ä¾‹ä¿æŒä¸€è‡´
+### forå¾ªçŽ¯5æ¬¡åšä¸åŒæŠ˜æ•°
 ###
 for (fold in c(1,2,3,4,5)){
 
@@ -37,17 +37,17 @@ for (fold in c(1,2,3,4,5)){
 
   nthreads <- 8
 
-### Ä£ÐÍµ÷²Î Í¬²ÉÓÃ5ÕÛ½»²æÑéÖ¤
+### æ¨¡åž‹è°ƒå‚ åŒé‡‡ç”¨5æŠ˜äº¤å‰éªŒè¯
 
 ### XGB
 
   num_feature <- dim(x.train)[2]
   #head(x.train[1:5,(num_feature-2):num_feature])
 
-  x.train.xgb <- data.matrix(x.train) # ½«×Ô±äÁ¿×ª»¯Îª¾ØÕó
-  dtrain<-list(data=x.train.xgb[,c(2:(num_feature-2))],label=x.train.xgb[,(num_feature-1)]*(-(-1)^(as.numeric(x.train.xgb[,num_feature]))))	#time*£¨-status£© ÎªÉ¾Ê§Êý¾ÝÊÇÎª¸ºÊý
+  x.train.xgb <- data.matrix(x.train) # å°†è‡ªå˜é‡è½¬åŒ–ä¸ºçŸ©é˜µ
+  dtrain<-list(data=x.train.xgb[,c(2:(num_feature-2))],label=x.train.xgb[,(num_feature-1)]*(-(-1)^(as.numeric(x.train.xgb[,num_feature]))))	#time*[-(-1)^(status)] ä¸ºåˆ å¤±æ•°æ®æ—¶ä¸ºè´Ÿæ•°
   Dtrain<-xgb.DMatrix(dtrain$data,label=dtrain$label)
-  x.test.xgb <- data.matrix(x.test) # ½«×Ô±äÁ¿×ª»¯Îª¾ØÕó
+  x.test.xgb <- data.matrix(x.test) # å°†è‡ªå˜é‡è½¬åŒ–ä¸ºçŸ©é˜µ
   dtest<-list(data=x.test.xgb[,c(2:(num_feature-2))],label=x.test.xgb[,(num_feature-1)]*(-(-1)^(as.numeric(x.test.xgb[,num_feature]))))	#time
   Dtest<-xgb.DMatrix(dtest$data,label=dtest$label)
 
@@ -60,18 +60,18 @@ for (fold in c(1,2,3,4,5)){
   source("xgblc_1.R")
   xgblc_param_1(best_param,best_loss,best_lost_index,seed.number,watchlist,fold, nthreads)
 
-  ### µ÷²Îlambda2
+  ### è°ƒå‚lambda2
   load(file = sprintf("%d_xgblc_1_result.RData",fold))
  ## 
  #  
  #  CVgroup <- function(k,datasize,seed){
  #    cvlist <- list()
  #    set.seed(seed)
- #    n <- rep(1:k,ceiling(datasize/k))[1:datasize]    #½«Êý¾Ý·Ö³ÉK·Ý£¬²¢Éú³ÉµÄÍê³ÉÊý¾Ý¼¯n
- #    temp <- sample(n,datasize)   #°Ñn´òÂÒ
+ #    n <- rep(1:k,ceiling(datasize/k))[1:datasize]    #å°†æ•°æ®åˆ†æˆKä»½ï¼Œå¹¶ç”Ÿæˆçš„å®Œæˆæ•°æ®é›†n
+ #    temp <- sample(n,datasize)   #æŠŠnæ‰“ä¹±
  #    x <- 1:k
  #    dataseq <- 1:datasize
- #    cvlist <- lapply(x,function(x) dataseq[temp==x])  #dataseqÖÐËæ»úÉú³Ék¸öËæ»úÓÐÐòÊý¾ÝÁÐ
+ #    cvlist <- lapply(x,function(x) dataseq[temp==x])  #dataseqä¸­éšæœºç”Ÿæˆkä¸ªéšæœºæœ‰åºæ•°æ®åˆ—
  #    return(cvlist)
  #  }
  #  
@@ -85,10 +85,10 @@ for (fold in c(1,2,3,4,5)){
  #   num_feature <- dim(x.train)[2]
  #    #head(x.train[1:5,(num_feature-2):num_feature])
  #  
- #    x.train.xgb <- data.matrix(x.train) # ½«×Ô±äÁ¿×ª»¯Îª¾ØÕó
- #   dtrain<-list(data=x.train.xgb[,c(2:(num_feature-2))],label=x.train.xgb[,(num_feature-1)]*(-(-1)^(as.numeric(x.train.xgb[,num_feature]))))	#time*£¨-status£© ÎªÉ¾Ê§Êý¾ÝÊÇÎª¸ºÊý
+ #    x.train.xgb <- data.matrix(x.train) # å°†è‡ªå˜é‡è½¬åŒ–ä¸ºçŸ©é˜µ
+ #   dtrain<-list(data=x.train.xgb[,c(2:(num_feature-2))],label=x.train.xgb[,(num_feature-1)]*(-(-1)^(as.numeric(x.train.xgb[,num_feature]))))	#time*[-(-1)^(status)] ä¸ºåˆ å¤±æ•°æ®æ—¶ä¸ºè´Ÿæ•°
  #    Dtrain<-xgb.DMatrix(dtrain$data,label=dtrain$label)
- #    x.test.xgb <- data.matrix(x.test) # ½«×Ô±äÁ¿×ª»¯Îª¾ØÕó
+ #    x.test.xgb <- data.matrix(x.test) # å°†è‡ªå˜é‡è½¬åŒ–ä¸ºçŸ©é˜µ
  #    dtest<-list(data=x.test.xgb[,c(2:(num_feature-2))],label=x.test.xgb[,(num_feature-1)]*(-(-1)^(as.numeric(x.test.xgb[,num_feature]))))	#time
  #    Dtest<-xgb.DMatrix(dtest$data,label=dtest$label)
  ##
